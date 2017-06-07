@@ -1,0 +1,20 @@
+---
+
+- name: Install ntpd
+  pacman:
+    name: "{{ ntpd_package }}"
+    state: present
+
+- name: Configure netctl
+  file:
+    path: "/etc/netctl/{{ item }}"
+    block: |
+      ExecUpPost='/usr/bin/ntpd || true'
+      ExecDownPre='killall ntpd || true'
+  with_items: "{{ ntpd_netctl_profiles }}"
+
+- name: Install NetworkManager dispatcher scripts
+  pacman:
+    name: networkmanager-dispatcher-ntpd
+    state: present
+  when: ntpd_use_networkmanager
