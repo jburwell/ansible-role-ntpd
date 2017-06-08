@@ -4,3 +4,5 @@
   service:
     name: "{{ ntpd_service }}"
     state: restarted
+    enabled: true
+  become: true

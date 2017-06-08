@@ -22,7 +22,7 @@
   command: ntpd --version
   register: register_ntpd_version
   changed_when: false
-  always_run: yes
+  check_mode: false
 
 - name: Set ntpd_supports_pool
   set_fact:
@@ -44,9 +44,3 @@
   when: ntpd_role == 'client'
   become: true
 
-- name: Start ntpd
-  service:
-    name: "{{ ntpd_service }}"
-    enabled: true
-    state: started
-  become: true
