@@ -4,6 +4,7 @@
   pacman:
     name: "{{ ntpd_package }}"
     state: present
+  become: true
 
 - name: Configure netctl
   file:
@@ -12,9 +13,11 @@
       ExecUpPost='/usr/bin/ntpd || true'
       ExecDownPre='killall ntpd || true'
   with_items: "{{ ntpd_netctl_profiles }}"
+  become: true
 
 - name: Install NetworkManager dispatcher scripts
   pacman:
     name: networkmanager-dispatcher-ntpd
     state: present
   when: ntpd_use_networkmanager
+  become: true
