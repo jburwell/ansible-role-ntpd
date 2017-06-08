@@ -9,12 +9,14 @@
   file:
     path: "{{ ntpd_script_dir }}"
     state: directory
+  become: true
 
 - name: Create ansible-ntpd-checkconf
   copy:
     dest: "{{ ntpd_script_dir }}/ansible-ntpd-checkconf"
     src: ansible-ntpd-checkconf.sh
     mode: 0755
+  become: true
 
 - name: Register ntpd version
   command: ntpd --version
@@ -31,6 +33,7 @@
     url: "{{ ntpd_leap_seconds_url }}"
     dest: "{{ ntpd_leapfile }}"
     force: yes
+  become: true
 
 - name: Create ntpd.conf
   template:
@@ -39,9 +42,11 @@
     validate: "ansible-ntpd-checkconf %s"
   notify: Restart ntpd
   when: ntpd_role == 'client'
+  become: true
 
 - name: Start ntpd
   service:
     name: "{{ ntpd_service }}"
     enabled: true
     state: started
+  become: true
